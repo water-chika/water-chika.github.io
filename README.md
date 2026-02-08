@@ -4,7 +4,7 @@ Recently I use a standalone building repo to seperate building from source code 
 
 ## Linear Algebra
 
-This is a C++20 library written when I study Linear Algebra. The library is used to practice My C++ and give me some feedback to learning Linear algebra.
+This is a C++20 library written when I study Linear Algebra. The library is used to practice my C++ and give me some feedback to learning Linear Algebra.
 
 Related repos:
 [linear_algebra](https://github.com/water-chika/linear_algebra),
