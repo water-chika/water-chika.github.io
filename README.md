@@ -27,3 +27,8 @@ It contains a SPIRV disassember: [spirv_parser](https://github.com/water-chika/s
 Repo: [constexpr_map](https://github.com/water-chika/constexpr_map)
 
 It uses meta-programming to implement a constexpr map with O(1) query time. It also could be used like a constexpr set.
+
+## HIP support
+
+I'm trying to add support of HIP to [cpp_helper](https://github.com/water-chika/cpp_helper) and [linear_algebra](https://github.com/water-chika/linear_algebra).
+With this, [linear_algebra](https://github.com/water-chika/linear_algebra) library could be run on AMD GPU.
