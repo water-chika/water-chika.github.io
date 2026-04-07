@@ -32,3 +32,10 @@ It uses meta-programming to implement a constexpr map with O(1) query time. It a
 
 I'm trying to add support of HIP to [cpp_helper](https://github.com/water-chika/cpp_helper) and [linear_algebra](https://github.com/water-chika/linear_algebra).
 With this, [linear_algebra](https://github.com/water-chika/linear_algebra) library could be run on AMD GPU.
+
+## Parallel Scripts
+
+There is a repo contains some scripts to parallel do some thing like extract zip, copy folders and compare folders.
+
+URL: [parallel_extract_zip](../parallel_extract_zip)
+
