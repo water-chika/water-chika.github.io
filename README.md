@@ -37,5 +37,5 @@ With this, [linear_algebra](https://github.com/water-chika/linear_algebra) libra
 
 There is a repo contains some scripts to parallel do some thing like extract zip, copy folders and compare folders.
 
-URL: [parallel_extract_zip](../../parallel_extract_zip)
+URL: [parallel_extract_zip](https://github.com/water-chika/parallel_extract_zip)
 
