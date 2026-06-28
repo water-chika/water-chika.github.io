@@ -1,0 +1,36 @@
+[submodule "git_script"]
+	path = git_script
+	url = https://github.com/water-chika/git_script
+[submodule "win32_helper"]
+	path = win32_helper
+	url = https://github.com/water-chika/win32_helper
+[submodule "hip_helper"]
+	path = hip_helper
+	url = https://github.com/water-chika/hip_helper
+[submodule "hip_dummy"]
+	path = hip_dummy
+	url = https://github.com/water-chika/hip_dummy
+[submodule "amd64_assembler"]
+	path = amd64_assembler
+	url = https://github.com/water-chika/amd64_assembler
+[submodule "complex_number"]
+	path = complex_number
+	url = https://github.com/water-chika/complex_number
+[submodule "cpp_helper"]
+	path = cpp_helper
+	url = https://github.com/water-chika/cpp_helper
+[submodule "cpu"]
+	path = cpu
+	url = https://github.com/water-chika/cpu
+[submodule "vulkan_start"]
+	path = vulkan_start
+	url = https://github.com/water-chika/vulkan_start
+[submodule "scripts"]
+	path = scripts
+	url = https://github.com/water-chika/scripts
+[submodule "terminal_emulator"]
+	path = terminal_emulator
+	url = https://github.com/water-chika/terminal_emulator
+[submodule "constexpr_map"]
+	path = constexpr_map
+	url = https://github.com/water-chika/constexpr_map
