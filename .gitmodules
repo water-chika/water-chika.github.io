@@ -34,3 +34,204 @@
 [submodule "constexpr_map"]
 	path = constexpr_map
 	url = https://github.com/water-chika/constexpr_map
+[submodule "WindowsUtils"]
+	path = WindowsUtils
+	url = https://github.com/water-chika/WindowsUtils
+[submodule "terminal_emulator_build"]
+	path = terminal_emulator_build
+	url = https://github.com/water-chika/terminal_emulator_build
+[submodule "terminal_emulator_vulkan_renderer"]
+	path = terminal_emulator_vulkan_renderer
+	url = https://github.com/water-chika/terminal_emulator_vulkan_renderer
+[submodule "librfb"]
+	path = librfb
+	url = https://github.com/water-chika/librfb
+[submodule "librfb_build"]
+	path = librfb_build
+	url = https://github.com/water-chika/librfb_build
+[submodule "vulkan_helper"]
+	path = vulkan_helper
+	url = https://github.com/water-chika/vulkan_helper
+[submodule "git_script_build"]
+	path = git_script_build
+	url = https://github.com/water-chika/git_script_build
+[submodule "serial_mouse"]
+	path = serial_mouse
+	url = https://github.com/water-chika/serial_mouse
+[submodule "atmega328p_programmer"]
+	path = atmega328p_programmer
+	url = https://github.com/water-chika/atmega328p_programmer
+[submodule "spirv_parser_build"]
+	path = spirv_parser_build
+	url = https://github.com/water-chika/spirv_parser_build
+[submodule "spirv_parser"]
+	path = spirv_parser
+	url = https://github.com/water-chika/spirv_parser
+[submodule "map_file"]
+	path = map_file
+	url = https://github.com/water-chika/map_file
+[submodule "vulkan_layer_build"]
+	path = vulkan_layer_build
+	url = https://github.com/water-chika/vulkan_layer_build
+[submodule "vulkan_layer"]
+	path = vulkan_layer
+	url = https://github.com/water-chika/vulkan_layer
+[submodule "ray_tracing_with_linear_algebra"]
+	path = ray_tracing_with_linear_algebra
+	url = https://github.com/water-chika/ray_tracing_with_linear_algebra
+[submodule "uefi_boot_next"]
+	path = uefi_boot_next
+	url = https://github.com/water-chika/uefi_boot_next
+[submodule "linear_algebra_test_build"]
+	path = linear_algebra_test_build
+	url = https://github.com/water-chika/linear_algebra_test_build
+[submodule "linear_algebra_test"]
+	path = linear_algebra_test
+	url = https://github.com/water-chika/linear_algebra_test
+[submodule "linear_algebra"]
+	path = linear_algebra
+	url = https://github.com/water-chika/linear_algebra
+[submodule "uefi_boot_next_build"]
+	path = uefi_boot_next_build
+	url = https://github.com/water-chika/uefi_boot_next_build
+[submodule "git_helper_build"]
+	path = git_helper_build
+	url = https://github.com/water-chika/git_helper_build
+[submodule "git_helper"]
+	path = git_helper
+	url = https://github.com/water-chika/git_helper
+[submodule "Vulkan-Debug"]
+	path = Vulkan-Debug
+	url = https://github.com/water-chika/Vulkan-Debug
+[submodule "build"]
+	path = build
+	url = https://github.com/water-chika/build
+[submodule "glslc_cache"]
+	path = glslc_cache
+	url = https://github.com/water-chika/glslc_cache
+[submodule "linux_utils"]
+	path = linux_utils
+	url = https://github.com/water-chika/linux_utils
+[submodule "parallel_extract_zip"]
+	path = parallel_extract_zip
+	url = https://github.com/water-chika/parallel_extract_zip
+[submodule "amdgpu_assembler"]
+	path = amdgpu_assembler
+	url = https://github.com/water-chika/amdgpu_assembler
+[submodule "elf_helper"]
+	path = elf_helper
+	url = https://github.com/water-chika/elf_helper
+[submodule "set"]
+	path = set
+	url = https://github.com/water-chika/set
+[submodule "abstract_algebra"]
+	path = abstract_algebra
+	url = https://github.com/water-chika/abstract_algebra
+[submodule "integer"]
+	path = integer
+	url = https://github.com/water-chika/integer
+[submodule "vulkan_resource_manager"]
+	path = vulkan_resource_manager
+	url = https://github.com/water-chika/vulkan_resource_manager
+[submodule "cpp_start"]
+	path = cpp_start
+	url = https://github.com/water-chika/cpp_start
+[submodule "voxel_renderer"]
+	path = voxel_renderer
+	url = https://github.com/water-chika/voxel_renderer
+[submodule "circular_buffer"]
+	path = circular_buffer
+	url = https://github.com/water-chika/circular_buffer
+[submodule "real_number"]
+	path = real_number
+	url = https://github.com/water-chika/real_number
+[submodule "text_to_c_string"]
+	path = text_to_c_string
+	url = https://github.com/water-chika/text_to_c_string
+[submodule "execute_binary_code"]
+	path = execute_binary_code
+	url = https://github.com/water-chika/execute_binary_code
+[submodule "rational_number"]
+	path = rational_number
+	url = https://github.com/water-chika/rational_number
+[submodule "test_linear_algebra_with_rational_number"]
+	path = test_linear_algebra_with_rational_number
+	url = https://github.com/water-chika/test_linear_algebra_with_rational_number
+[submodule "rust_linear_algebra"]
+	path = rust_linear_algebra
+	url = https://github.com/water-chika/rust_linear_algebra
+[submodule "DirectX12_start"]
+	path = DirectX12_start
+	url = https://github.com/water-chika/DirectX12_start
+[submodule "old_project_avr-as"]
+	path = old_project_avr-as
+	url = https://github.com/water-chika/old_project_avr-as
+[submodule "old_project_x86-64-as"]
+	path = old_project_x86-64-as
+	url = https://github.com/water-chika/old_project_x86-64-as
+[submodule "old_project_utils"]
+	path = old_project_utils
+	url = https://github.com/water-chika/old_project_utils
+[submodule "old_project_shell"]
+	path = old_project_shell
+	url = https://github.com/water-chika/old_project_shell
+[submodule "old_project_ed"]
+	path = old_project_ed
+	url = https://github.com/water-chika/old_project_ed
+[submodule "avr_assembler"]
+	path = avr_assembler
+	url = https://github.com/water-chika/avr_assembler
+[submodule "vim-config"]
+	path = vim-config
+	url = https://github.com/water-chika/vim-config
+[submodule "cube_animation"]
+	path = cube_animation
+	url = https://github.com/water-chika/cube_animation
+[submodule "draw_pixels"]
+	path = draw_pixels
+	url = https://github.com/water-chika/draw_pixels
+[submodule "calculus"]
+	path = calculus
+	url = https://github.com/water-chika/calculus
+[submodule "RayTracingRenderer"]
+	path = RayTracingRenderer
+	url = https://github.com/water-chika/RayTracingRenderer
+[submodule "measure_duration"]
+	path = measure_duration
+	url = https://github.com/water-chika/measure_duration
+[submodule "VulkanFragmentLab"]
+	path = VulkanFragmentLab
+	url = https://github.com/water-chika/VulkanFragmentLab
+[submodule "vec3"]
+	path = vec3
+	url = https://github.com/water-chika/vec3
+[submodule "image_outputer"]
+	path = image_outputer
+	url = https://github.com/water-chika/image_outputer
+[submodule "lexical_analysis"]
+	path = lexical_analysis
+	url = https://github.com/water-chika/lexical_analysis
+[submodule "TerminalDisplay"]
+	path = TerminalDisplay
+	url = https://github.com/water-chika/TerminalDisplay
+[submodule "terminal_display_vulkan_renderer"]
+	path = terminal_display_vulkan_renderer
+	url = https://github.com/water-chika/terminal_display_vulkan_renderer
+[submodule "glfwpp"]
+	path = glfwpp
+	url = https://github.com/water-chika/glfwpp
+[submodule "dependence_compiler"]
+	path = dependence_compiler
+	url = https://github.com/water-chika/dependence_compiler
+[submodule "cplusplus_tools"]
+	path = cplusplus_tools
+	url = https://github.com/water-chika/cplusplus_tools
+[submodule "ip_inform"]
+	path = ip_inform
+	url = https://github.com/water-chika/ip_inform
+[submodule "webrtc"]
+	path = webrtc
+	url = https://github.com/water-chika/webrtc
+[submodule "vulkan_start_build"]
+	path = vulkan_start_build
+	url = https://github.com/water-chika/vulkan_start_build
