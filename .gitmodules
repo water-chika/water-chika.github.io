@@ -235,3 +235,6 @@
 [submodule "vulkan_start_build"]
 	path = vulkan_start_build
 	url = https://github.com/water-chika/vulkan_start_build
+[submodule "posix_cpp"]
+	path = posix_cpp
+	url = https://github.com/water-chika/posix_cpp
