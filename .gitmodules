@@ -238,3 +238,15 @@
 [submodule "posix_cpp"]
 	path = posix_cpp
 	url = https://github.com/water-chika/posix_cpp
+[submodule "uinput_helper"]
+	path = uinput_helper
+	url = https://github.com/water-chika/uinput_helper
+[submodule "xkb_helper"]
+	path = xkb_helper
+	url = https://github.com/water-chika/xkb_helper
+[submodule "wayland_import"]
+	path = wayland_import
+	url = https://github.com/water-chika/wayland_import
+[submodule "wayland_helper"]
+	path = wayland_helper
+	url = https://github.com/water-chika/wayland_helper
