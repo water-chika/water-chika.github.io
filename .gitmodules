@@ -250,3 +250,6 @@
 [submodule "wayland_helper"]
 	path = wayland_helper
 	url = https://github.com/water-chika/wayland_helper
+[submodule "vulkan_remote"]
+	path = vulkan_remote
+	url = https://github.com/water-chika/vulkan_remote
