@@ -4,12 +4,12 @@ This repository catalogs the public repositories owned by
 [water-chika](https://github.com/water-chika).
 
 - `repos.json` is the generated repository inventory.
-- `update-repos.sh` regenerates the inventory through the GitHub API.
+- `update_repos.py` regenerates the inventory through the GitHub API.
 
 Update the catalog with:
 
 ```sh
-./update-repos.sh
+./update_repos.py
 ```
 
 List repository names without cloning their histories:
