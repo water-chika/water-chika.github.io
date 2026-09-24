@@ -1,5 +1,33 @@
 # Repos
 
+This repository catalogs the public repositories owned by
+[water-chika](https://github.com/water-chika).
+
+- `repos.json` is the generated repository inventory.
+- `update-repos.sh` regenerates the inventory through the GitHub API.
+
+Update the catalog with:
+
+```sh
+./update-repos.sh
+```
+
+List repository names without cloning their histories:
+
+```sh
+jq -r '.[].name' repos.json
+```
+
+Query GitHub directly when a local catalog is not needed:
+
+```sh
+gh repo list water-chika --limit 1000
+```
+
+The catalog replaces the previous submodule collection. Submodules pin commits
+and are useful for build dependencies, but they are unnecessary for a repository
+index and make ordinary clones much larger and harder to maintain.
+
 Recently I use a standalone building repo to seperate building from source code because this could resolve duplicate deps of repos.
 
 ## Linear Algebra
