@@ -1,2 +1,4 @@
 # Former submodule checkouts retained locally after catalog migration.
 /*/
+!/assets/
+!/assets/**
