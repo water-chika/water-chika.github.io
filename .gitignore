@@ -1,4 +1,20 @@
 # Former submodule checkouts retained locally after catalog migration.
 /*/
+
+# Keep standard GitHub Pages/Jekyll directories trackable.
+!/_data/
+!/_data/**
+!/_includes/
+!/_includes/**
+!/_layouts/
+!/_layouts/**
+!/_posts/
+!/_posts/**
+!/_sass/
+!/_sass/**
+!/.github/
+!/.github/**
 !/assets/
 !/assets/**
+!/images/
+!/images/**
