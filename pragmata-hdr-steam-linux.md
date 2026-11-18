@@ -80,6 +80,62 @@ Open the game's display settings and enable HDR.
 
 When finished, exit PRAGMATA and Steam. Gamescope should return to the terminal. Switch back to the desktop VT with **Ctrl+Alt+F1**, or the VT used by the desktop session.
 
+## Ray tracing and path tracing
+
+PRAGMATA uses DirectX 12 through VKD3D-Proton. On a supported GPU, the Vulkan driver must expose:
+
+- `VK_KHR_acceleration_structure`;
+- `VK_KHR_ray_query`;
+- `VK_KHR_ray_tracing_pipeline`.
+
+As a preliminary host check, inspect the complete `vulkaninfo` output without stripping its physical-device headings:
+
+```sh
+vulkaninfo --summary
+vulkaninfo | less
+```
+
+For the GPU you intend to use, confirm all three extension names and the corresponding feature booleans: `accelerationStructure = true`, `rayQuery = true`, and `rayTracingPipeline = true`. On a multi-GPU system, a bare grep can mix results from different devices.
+
+This host check is not proof of the device or ICD selected inside Steam's pressure-vessel container. Confirm the GPU used by the actual PRAGMATA process through a VKD3D/Proton runtime log or an API/GPU capture. If Gamescope composes on the wrong GPU, its `--prefer-vk-device` option can select the compositor device, but the game's own device selection must be verified separately.
+
+A verified RX 9070 XT/RADV run exposed all three extensions and feature bits. The `config.ini` beside the active Steam App ID 3357650 installation also recorded:
+
+```ini
+Capability=DirectX12
+RayTracing=ON
+PathTracing=ON
+```
+
+Check the file from the same Steam library and installation that launched the running process; another library or an old copy may contain stale settings.
+
+If the game's UI still says ray tracing cannot be enabled while the active configuration records it as on, the remaining possibilities include stale UI capability state or an engine fallback after startup. A configuration value, visual difference, or performance change can support a diagnosis but does not prove that rays are being traced. Use an authoritative runtime log or API/GPU capture to confirm effective ray or path tracing.
+
+Do not add `PROTON_ENABLE_NVAPI` on an AMD GPU. The baseline requirement is DirectX 12, a recent official Proton/VKD3D-Proton build, and a Vulkan driver exposing the RT extensions.
+
+## Audio in a standalone VT session
+
+Proton forwards audio through PipeWire/PulseAudio into its pressure-vessel container. Diagnose the host and container sides separately:
+
+1. On the host, check whether WirePlumber/PipeWire still lists the expected physical sink. If the host itself shows only **Dummy Output**, fix session and device ownership first.
+2. If host playback works but PRAGMATA does not, inspect the `PULSE_SERVER` or PipeWire/PulseAudio socket forwarded into Steam's pressure-vessel container. A missing, stale, or inaccessible socket is a separate container-routing failure.
+
+For the verified host-side failure, launching standalone Gamescope outside a genuine logind/PAM login caused the physical devices to disappear. Avoid constructing the session with a chain such as:
+
+```text
+openvt -> su -> dbus-run-session -> gamescope
+```
+
+That chain can put Gamescope on the VT without creating a proper logind user session. When the VT becomes active, WirePlumber may lose access to `/dev/snd`, physical devices can disappear, and PRAGMATA audio is routed to Dummy Output.
+
+Use one of these approaches:
+
+1. switch to a real login prompt on the target VT, log in normally, and start Gamescope there;
+2. configure a display/session launcher that enters through PAM/logind;
+3. if HDR support permits it, keep Gamescope in the existing desktop session where PipeWire already owns the devices.
+
+For a Bluetooth headset, use **A2DP** for game playback. Opening Steam Voice Settings may request microphone capture and make WirePlumber switch the headset to the lower-quality HFP/HSP profile. Disable automatic headset-profile switching if that behavior is unwanted, and use a separate microphone for voice capture.
+
 ## Verify the HDR path
 
 A brighter image alone does not prove that the game created an HDR swapchain. Check each layer.
@@ -139,6 +195,20 @@ Do not use `--hdr-debug-force-support` as proof of working HDR. Gamescope can ad
 ### The game opens on the normal desktop
 
 The wrong Steam process handled the launch. Exit desktop Steam, start Steam inside standalone Gamescope, and then launch PRAGMATA from that instance.
+
+### Audio uses Dummy Output
+
+First check the host. If WirePlumber no longer sees physical sinks, verify the active login session and access to `/dev/snd`. If the session was started with `openvt` and `su`, exit it and log in normally on the VT through PAM/logind before starting Gamescope again.
+
+If normal host applications can use the expected sink, check the audio server/socket visible to the Steam pressure-vessel container and PRAGMATA process. Host session ownership and container socket forwarding are separate failure points.
+
+### A Bluetooth headset switches to low-quality audio
+
+Steam or another application probably opened microphone capture and triggered HFP/HSP. Return the headset to A2DP for playback, prevent automatic profile switching if appropriate for the desktop, and select a separate microphone for capture.
+
+### Ray tracing is unavailable or has no visible effect
+
+Confirm the game is using DirectX 12 through VKD3D-Proton and that the Vulkan device selected by the actual process exposes the acceleration-structure, ray-query, and ray-tracing-pipeline extensions and feature bits. If the active installation's `config.ini` says `RayTracing=ON` or `PathTracing=ON`, use an authoritative runtime log or API/GPU capture to verify effective rendering rather than relying on the setting, image, or performance alone.
 
 ## Upstream references
 
