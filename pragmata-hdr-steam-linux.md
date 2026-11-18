@@ -6,12 +6,18 @@ title: Enable HDR for PRAGMATA on Steam Linux
 
 PRAGMATA needs a complete HDR path. Wine must report a 10-bit Advanced Color display, Gamescope must expose HDR Vulkan formats, and Gamescope must drive the physical display in HDR.
 
-This procedure was verified with:
+Last verified: **2026-11-19**.
 
-- official Proton 11 or Proton Experimental;
+Verified test configuration:
+
+- PRAGMATA Steam App ID 3357650, build 24543093;
+- official Proton Experimental;
 - Proton's default X11/Xwayland path;
-- standalone DRM Gamescope on another virtual terminal;
+- Gamescope 3.17.0 in standalone DRM mode on another virtual terminal;
+- Mesa RADV 26.2.7 on an AMD Radeon RX 9070 XT;
 - an HDR-capable display with HDR enabled.
+
+The game build, GPU, connector, resolution, refresh rate, audio device, and keyboard layout are machine-specific. Discover and substitute the values for your system.
 
 > **Keep Proton on Xwayland.** Do not set `PROTON_ENABLE_WAYLAND=1` for this procedure. Valve's X11 driver propagates the HDR monitor state PRAGMATA checks; native Wine Wayland does not currently provide the equivalent path.
 
@@ -21,7 +27,13 @@ This procedure was verified with:
 2. Install current Steam, Gamescope, Mesa/Vulkan drivers, and Vulkan tools.
 3. Open **Steam → PRAGMATA → Properties → Compatibility**.
 4. Select official Proton Experimental or Proton 11.
-5. Close any Steam client already running on the desktop before starting the standalone session.
+5. Shut down Steam before starting the standalone session:
+
+   ```sh
+   steam -shutdown
+   ```
+
+6. Verify that no Steam client or helper processes remain. Otherwise `steam -gamepadui` inside Gamescope can forward to the existing desktop singleton and exit, causing Gamescope to report `Primary child shut down!`.
 
 Start with an official Proton build. Custom builds add another variable when diagnosing display behavior.
 
@@ -45,6 +57,9 @@ Save your work, switch to another virtual terminal such as **Ctrl+Alt+F2**, and 
 DXVK_HDR=1 \
 ENABLE_HDR_WSI=1 \
 ENABLE_GAMESCOPE_WSI=1 \
+GAMESCOPE_ZENITY_DISABLE=1 \
+XDG_CURRENT_DESKTOP=gamescope \
+DISABLE_VK_LAYER_LUNARG_override=1 \
 gamescope \
   --backend drm \
   --prefer-output <connector> \
@@ -58,6 +73,8 @@ Example for `DP-1` at 3840×2160 and 120 Hz:
 
 ```sh
 DXVK_HDR=1 ENABLE_HDR_WSI=1 ENABLE_GAMESCOPE_WSI=1 \
+GAMESCOPE_ZENITY_DISABLE=1 XDG_CURRENT_DESKTOP=gamescope \
+DISABLE_VK_LAYER_LUNARG_override=1 \
 gamescope --backend drm --prefer-output DP-1 \
   -W 3840 -H 2160 -r 120 -f -e --hdr-enabled \
   -- steam -gamepadui
@@ -71,6 +88,18 @@ Each switch controls a different part of the path:
 | `ENABLE_GAMESCOPE_WSI=1` | Activates the Gamescope WSI layer, which exposes HDR10/ST.2084 Vulkan surface formats and forwards HDR metadata. |
 | `--hdr-enabled` | Tells Gamescope to drive the selected DRM output in HDR. Without it, an HDR client may be tone-mapped to SDR. |
 | `ENABLE_HDR_WSI=1` | Retained for compatibility with Proton/Gamescope HDR launch conventions used by current installations. |
+| `GAMESCOPE_ZENITY_DISABLE=1` and `XDG_CURRENT_DESKTOP=gamescope` | Disable Gamescope message-box helpers and select Steam's Gamescope-specific error-dialog behavior. This prevents a Zenity/WSI recursion that can create thousands of processes and exhaust system memory. |
+| `DISABLE_VK_LAYER_LUNARG_override=1` | Prevent a per-user vkconfig override from injecting Vulkan validation into Gamescope. Validation noise is unnecessary for normal play and incompatible layer combinations can crash Gamescope. |
+
+If validation is still injected, also try:
+
+```sh
+export VK_LOADER_LAYERS_DISABLE=VK_LAYER_LUNARG_override,VK_LAYER_KHRONOS_validation
+```
+
+Alternatively, prefix the Gamescope command with the assignment or add it as a systemd `Environment=` value.
+
+For a reusable launcher, place it in a constrained systemd unit or scope. A practical upper bound is `TasksMax=512`, with `MemoryMax`, `MemorySwapMax`, `OOMPolicy=kill`, and `KillMode=control-group` chosen for the machine. These limits contain a launcher or dialog recursion instead of allowing a system-wide OOM.
 
 ## 4. Launch PRAGMATA
 
@@ -82,7 +111,19 @@ When finished, exit PRAGMATA and Steam. Gamescope should return to the terminal.
 
 ## Ray tracing and path tracing
 
-PRAGMATA uses DirectX 12 through VKD3D-Proton. On a supported GPU, the Vulkan driver must expose:
+PRAGMATA deliberately hides its ordinary ray-tracing option when it detects Wine. Add this Steam launch option to bypass that game-specific gate:
+
+```text
+%command% /WineDetectionEnabled:False
+```
+
+When launching by Steam App ID, the equivalent argument is:
+
+```sh
+steam -applaunch 3357650 /WineDetectionEnabled:False
+```
+
+This only exposes the option; the renderer still needs DirectX 12 through VKD3D-Proton and a Vulkan RT-capable device. On a supported GPU, the Vulkan driver must expose:
 
 - `VK_KHR_acceleration_structure`;
 - `VK_KHR_ray_query`;
@@ -99,19 +140,17 @@ For the GPU you intend to use, confirm all three extension names and the corresp
 
 This host check is not proof of the device or ICD selected inside Steam's pressure-vessel container. Confirm the GPU used by the actual PRAGMATA process through a VKD3D/Proton runtime log or an API/GPU capture. If Gamescope composes on the wrong GPU, its `--prefer-vk-device` option can select the compositor device, but the game's own device selection must be verified separately.
 
-A verified RX 9070 XT/RADV run exposed all three extensions and feature bits. The `config.ini` beside the active Steam App ID 3357650 installation also recorded:
+A verified RX 9070 XT/RADV run exposed all three extensions and feature bits, reported D3D feature level 12_2, Shader Model 6.8, and DXR 1.1, and retained `RayTracing=ON` in the active installation's `config.ini`.
 
-```ini
-Capability=DirectX12
-RayTracing=ON
-PathTracing=ON
-```
+### Path tracing is experimental
 
-Check the file from the same Steam library and installation that launched the running process; another library or an old copy may contain stale settings.
+Do not treat `PathTracing=ON` as a supported AMD setup. In a normal run, PRAGMATA rewrote a forced `PathTracing=ON` value back to `PathTracing=OFF` while leaving ordinary ray tracing enabled.
 
-If the game's UI still says ray tracing cannot be enabled while the active configuration records it as on, the remaining possibilities include stale UI capability state or an engine fallback after startup. A configuration value, visual difference, or performance change can support a diagnosis but does not prove that rays are being traced. Use an authoritative runtime log or API/GPU capture to confirm effective ray or path tracing.
+`VKD3D_CONFIG=enable_experimental_features` exposed Work Graphs Tier 1.0 in a controlled probe and allowed `PathTracing=ON` to persist in one A/B run. It did not prove that PRAGMATA dispatched or rendered its path-tracing pipeline. Shader Execution Reordering was unavailable in the tested stack, and `VKD3D_CONFIG=dxr12` did not change the result.
 
-Do not add `PROTON_ENABLE_NVAPI` on an AMD GPU. The baseline requirement is DirectX 12, a recent official Proton/VKD3D-Proton build, and a Vulkan driver exposing the RT extensions.
+Treat path tracing through this experimental flag as an investigation, not a recommended launch recipe. Check the configuration from the same Steam library and installation that launched the process, then use an authoritative runtime log or API/GPU capture to prove effective rendering. A configuration value, image difference, or performance change is supporting evidence only.
+
+Do not add `PROTON_ENABLE_NVAPI` on an AMD GPU. The baseline requirement for ordinary RT is the Wine-detection bypass, DirectX 12, a recent official Proton/VKD3D-Proton build, and a Vulkan driver exposing the RT extensions.
 
 ## Audio in a standalone VT session
 
@@ -131,10 +170,28 @@ That chain can put Gamescope on the VT without creating a proper logind user ses
 Use one of these approaches:
 
 1. switch to a real login prompt on the target VT, log in normally, and start Gamescope there;
-2. configure a display/session launcher that enters through PAM/logind;
+2. configure a transient or persistent systemd service with `User=<user>`, `PAMName=login`, `TTYPath=/dev/tty2`, TTY standard input/output/error, and a matching `UtmpIdentifier`, then switch to that VT;
 3. if HDR support permits it, keep Gamescope in the existing desktop session where PipeWire already owns the devices.
 
+The PAM/logind service approach was verified to register a `login` session on `seat0`, retain physical audio access, and keep game audio on the selected headset. Apply the task and memory limits described above to the service.
+
 For a Bluetooth headset, use **A2DP** for game playback. Opening Steam Voice Settings may request microphone capture and make WirePlumber switch the headset to the lower-quality HFP/HSP profile. Disable automatic headset-profile switching if that behavior is unwanted, and use a separate microphone for voice capture.
+
+A correct logind session does not reconnect a headset that was already disconnected. Before launch, use `bluetoothctl info` to confirm that it is connected and `wpctl status` to confirm that the expected A2DP sink exists instead of Dummy Output.
+
+## Keyboard layout in Gamescope
+
+Gamescope's physical-keyboard layout is separate from running `setxkbmap` inside Xwayland. Set the standard XKB environment before Gamescope starts:
+
+```sh
+export XKB_DEFAULT_LAYOUT=<layout-list>
+export XKB_DEFAULT_VARIANT=<variant-list>
+export XKB_DEFAULT_OPTIONS=<options>
+```
+
+Export these values in the shell that starts Gamescope, prefix them to the Gamescope command, or configure them as systemd `Environment=` entries.
+
+For example, a two-layout configuration can use comma-separated layouts and variants plus a group-toggle option. Choose values that match your system rather than copying another machine's layout. A live override can be applied with `gamescopectl xkb_layout <layout>`, but restarting only PRAGMATA may not reload Gamescope's keyboard map.
 
 ## Verify the HDR path
 
@@ -152,7 +209,15 @@ The terminal should identify the intended connector and print:
 HDR output enabled
 ```
 
-There should be no DRM-master, seat, or output-fallback error.
+A single transient `drmModeAtomicCommit: Permission denied` can occur during VT/seat handoff even when Gamescope recovers. Judge the final state rather than one isolated line. Xwayland should remain running, and Gamescope's root properties should report:
+
+```text
+GAMESCOPE_DISPLAY_HDR_ENABLED=1
+GAMESCOPE_HDR_OUTPUT_FEEDBACK=1
+GAMESCOPE_DISPLAY_SUPPORTS_HDR=1
+```
+
+Persistent DRM-master, seat, or output-fallback errors still indicate a failed session.
 
 ### Windows API and game
 
@@ -208,7 +273,17 @@ Steam or another application probably opened microphone capture and triggered HF
 
 ### Ray tracing is unavailable or has no visible effect
 
-Confirm the game is using DirectX 12 through VKD3D-Proton and that the Vulkan device selected by the actual process exposes the acceleration-structure, ray-query, and ray-tracing-pipeline extensions and feature bits. If the active installation's `config.ini` says `RayTracing=ON` or `PathTracing=ON`, use an authoritative runtime log or API/GPU capture to verify effective rendering rather than relying on the setting, image, or performance alone.
+Confirm that `/WineDetectionEnabled:False` reaches PRAGMATA, that the game is using DirectX 12 through VKD3D-Proton, and that the Vulkan device selected by the actual process exposes the acceleration-structure, ray-query, and ray-tracing-pipeline extensions and feature bits. If the active installation's `config.ini` says `RayTracing=ON`, use an authoritative runtime log or API/GPU capture to verify effective rendering rather than relying on the setting, image, or performance alone.
+
+Do not present a forced `PathTracing=ON` value as working path tracing. The default AMD/Proton path resets it to off, and the experimental VKD3D feature path remains unverified.
+
+### Steam or Gamescope suddenly spawns many dialogs or processes
+
+Stop the session before it exhausts memory. Confirm `GAMESCOPE_ZENITY_DISABLE=1` and `XDG_CURRENT_DESKTOP=gamescope` reached Steam. Do not rely on an empty `STEAM_ZENITY`; current Steam startup code can overwrite it. Use a systemd task/memory limit so a future recursion is contained.
+
+### Gamescope prints Vulkan validation errors or crashes in a validation layer
+
+Disable the vkconfig override with `DISABLE_VK_LAYER_LUNARG_override=1`. If needed, set `VK_LOADER_LAYERS_DISABLE=VK_LAYER_LUNARG_override,VK_LAYER_KHRONOS_validation`. Do not disable the Gamescope WSI layer required for HDR.
 
 ## Upstream references
 
@@ -217,3 +292,6 @@ Confirm the game is using DirectX 12 through VKD3D-Proton and that the Vulkan de
 - [Valve Wine X11 HDR propagation](https://github.com/ValveSoftware/wine/commit/d33f47c489fcfb7d55c10cc53c0f4ed00b72ae49)
 - [Official Proton Experimental 11](https://github.com/ValveSoftware/Proton/tree/experimental_11.0)
 - [Wine Advanced Color query](https://github.com/ValveSoftware/wine/blob/5b557605b4e51f0853ec8e0e4f0eb536c669fae3/dlls/win32u/sysparams.c#L8079-L8115)
+- [PRAGMATA Wine-detection RT workaround](https://steamcommunity.com/app/3357650/discussions/0/796715497279450892/)
+- [VKD3D-Proton configuration reference](https://github.com/HansKristian-Work/vkd3d-proton#environment-variables)
+- [PRAGMATA path-tracing crash tracking](https://github.com/HansKristian-Work/vkd3d-proton/issues/2949)
