@@ -1,16 +1,7 @@
 # Repos
 
-This repository hosts [water-chika.github.io](https://water-chika.github.io/) and catalogs the public repositories owned by [water-chika](https://github.com/water-chika).
-
-The site currently includes a verified guide to [enable HDR for PRAGMATA on Steam Linux](https://water-chika.github.io/).
-
-Preview the static site locally with:
-
-```sh
-python -m http.server 8000
-```
-
-Then open <http://localhost:8000/>.
+This repository catalogs the public repositories owned by
+[water-chika](https://github.com/water-chika).
 
 - `repos.json` is the generated repository inventory.
 - `update_repos.py` regenerates the inventory through the GitHub API.
