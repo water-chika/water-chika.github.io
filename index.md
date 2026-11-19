@@ -8,6 +8,7 @@ title: water-chika
 ## Guides
 
 - [Enable HDR for PRAGMATA on Steam Linux](pragmata-hdr-steam-linux.html)
+- [Fix STEINS;GATE Not Launching on Steam Linux](steins-gate-steam-linux.html)
 
 ## Repositories
 
